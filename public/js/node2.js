@@ -414,7 +414,7 @@ socket.on('message', function(msg) {
           append_user(val.id, val);
           print_message("<span class='announcement'>"+val.name+" connected.</span>");
         break;case 'left':
-          fade_and_remove( $('#user_' + html_for_id(val.id)) )
+          fade_and_remove( 'user_' + val.id )
           print_message("<span class='announcement'>"+val.name+" disconnected.</span>");
         break;case 'node_data':
           $('#bubble').text( val.bubble.content )
