@@ -42,7 +42,7 @@ ul, li{margin:0px;padding:0px;}
   background:rgb(244,244,244);
   border:2px inset rgb(211,211,211);
   color:black;
-  z-index:5555555555555;
+  z-index:55555555;
 }
 
 body{
@@ -67,7 +67,7 @@ body{
 #delete_bubble{
   .node.holder.button;
   float:right;
-  z-index: 9999999999999999999999999999999999999999999999999999999999999998;
+  z-index: 99999999999;
   .tooltip {
     .node.holder.tooltip;
     .bubble {
@@ -89,10 +89,59 @@ body{
   border:none;
   border-top:2px inset rgb(211,211,211);
 
-//  .rounded_corner_top_left(13px);
-//  .rounded_corner_top_right(13px);
-  #change_name_form {
+  .button {
+    .node.holder.button;
+    position:absolute;
     float:right;
+    margin-left:-30px;
+    background:rgb(111,111,111);
+  }
+  :hover {
+    color:white;
+    .tooltip {
+      display:block;
+    }
+  }
+  .tooltip {
+    .node.holder.tooltip;
+    margin-left:-3px;
+    .bubble {
+      .node.holder.tooltip.bubble;
+      .arrow {
+        .node.holder.tooltip.bubble.arrow;
+      }
+    }
+  }
+
+  form {
+    float:right;
+    display:inline;
+    padding-right:10px;
+    label {
+      display:block;
+      position:absolute;
+      letter-spacing:0.1em;
+      font-weight:bold;
+    }
+    input[type=text] {
+      .nice_input_field();
+    }
+    input[type=submit]{
+      border:1px black solid;
+      .set_font();
+    }
+  }
+  #change_name_form {
+    label {
+      margin-left:33px;
+    }
+    #colorpicker {
+      margin-right:5px;
+      float:left;
+      width: 28px;
+      height: 28px;
+      background: url('../images/select2.png') center #000;
+    }
   }
 }
 
@@ -246,21 +295,7 @@ body{
   }
 }
 
-#change_name{
-  .nice_input_field();
-}
-#tool_bar input[type=submit]{
-  border:1px black solid;
-}
-
 // extras
-#colorpicker{
-    float:right;
-    width: 28px;
-    height: 28px;
-    background: url('../images/select2.png') center #000;
-}
-
 
 #error {
   position:absolute;

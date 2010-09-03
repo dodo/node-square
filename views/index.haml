@@ -3,18 +3,19 @@
     <h1 id='bubble'>Node<sup>❷</sup></h1> <h2 id='hashes'>(hashs)</h2>
 
 #tool_bar
+  editing:
+  %ul#user_list
   %form{id: 'change_name_form' }
     %div#colorpicker
     %input{type: 'text',   name: 'name', id: 'change_name'}
+    %label{for:'change_name'}= "name"
     %input{type: 'submit', value: 'update'}
-  %em
-    %a{href: '#', #realtime}
-      realtime
-    , editing:
-  %ul#user_list
-  %form{id: 'create_bubble_form', style:'display:inline'}
-    %input{type: 'text', name: 'name'}
-    %input{type: 'submit', value: 'create new mindmap'}
+  %form{id: 'create_bubble_form'}
+    = partial("button", [{symbol:"⚗",class:"realtime",info:"crazy mode - nodes move in realtime"}])
+    .button#nonerealtime{style:"display:none"}
+    %input{type: 'text', name: 'name', id: 'create_mindmap'}
+    %label{for:'create_mindmap'}= "mindmap"
+    %input{type: 'submit', value: 'create'}
   %p <a href="http://nodeknockout.com/teams/chaotic-unicorns" target="nko" title="Help me win Node.js KO!"><img style="position: fixed; top: 5px; right: 5px; border: 0px;" src="http://nodeknockout.com/images/voteko.png" alt="Help me win Node.js KO!" /></a>
 
 = partial('node', [{text:" _", id: "protonode", rel:''}])

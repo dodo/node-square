@@ -494,8 +494,15 @@ $('#colorpicker').ColorPicker({
     }
 })
 
-$('#real_time').click(function(){
+$('.realtime').click(function(){
     ani_man.toggle();
-})
+    if(ani_man.running()) {
+        $('.realtime').animate({backgroundColor:"red"},100);
+        console.log("realtime on.");
+    } else {
+        $('.realtime').animate({backgroundColor:$('#nonerealtime').css("backgroundColor")},100);
+        console.log("realtime off.");
+    }
+});
 // close (document ready)
 });

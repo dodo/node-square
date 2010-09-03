@@ -2,7 +2,7 @@
 var springsPhysics = function () {
 
     // defaults
-    
+
     var _default = {
             length:   80,   // 100
             strength: 300,  // 500
@@ -68,44 +68,48 @@ var springsPhysics = function () {
             return draw(engine);
         };
         var ani_manager = function (/*number of steps per sec*/ nr, scale) {
-            var interval;
             var manager = {};
-            
+
             var oneStep = function() {
                 realtime(1000/nr);
             };
-            
+
             var start = manager.start =  function() {
-                if(typeof(interval) === "undefined") {
+                if(!running()) {
                     interval = setInterval(oneStep, 1000/nr);
                 }
             }
-            
+
             var stop = manager.stop =  function() {
-                if(typeof(interval) !== "undefined") {
+                if(running()) {
                     clearInterval(interval);
+                    delete interval;
                 }
             }
-            
+
             manager.animate = function (/*animation time*/ anims, special_scale) {
-                if(typeof(special_scale) === "undefined") {
+                if(typeof(special_scale) == "undefined") {
                     special_scale = 1;
                 }
-                
-                if(interval === undefined) {
+
+                if(!running()) {
                     live_render(anims*scale*special_scale, nr, anims);
                     console.log('starting animation', anims/(scale*special_scale), nr, anims);
                 }
             };
-            
+
             manager.toggle = function() {
-                if(interval === undefined) {
+                if(!running()) {
                     start();
                 } else {
-                    stop()
+                    stop();
                 }
             };
-            
+
+            var running = manager.running = function () {
+                return typeof(interval) != "undefined";
+            };
+
             return manager;
         };
         var add = function (nodeid,parid) {return add_node(engine,nodeid,parid);};
@@ -232,7 +236,7 @@ var springsPhysics = function () {
         g.closePath();
         return engine;
     };
-    
+
     var dom_draw = system.dom_draw = function (engine) {
         var window = $("#nodes");
         var obj = $("#canvas");
@@ -253,7 +257,7 @@ var springsPhysics = function () {
         g.closePath();
         return engine;
     };
-    
+
     var animate = system.animate = function (engine, dt) {
         $.each(engine.nodes, function (_, node) {
             var pos = vsub(node.position, node.middle);
