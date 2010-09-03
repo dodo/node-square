@@ -1,22 +1,4 @@
 %div.node.draggable{id: node.id, relation: node.rel, class: node.class}
   .holder
-    %a.add_node.button{href: "#"}
-      .tooltip
-        .bubble
-          .arrow
-          add child node
-      ✚
-    %a.edit.button{href: "#"}
-      .tooltip
-        .bubble
-          .arrow
-          edit
-      ⚙
-    %a.delete_node.button{href: "#"}
-      .tooltip
-        .bubble
-          .arrow
-          delete
-      ✖
-  .body
+    = partial("button", [{symbol:"✚",class:"add_node",info:"add child node"},{symbol:"⚙",class:"edit",info:"edit"},{symbol:"✖",class:"delete_node",info:"delete"}])
     %p= node.text
