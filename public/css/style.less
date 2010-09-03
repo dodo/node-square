@@ -6,6 +6,7 @@
 @node_border_color:rgb(220,220,220);
 @holder_button_size:@node_size * 0.5;
 @node_background_color:rgb(235, 235, 235);
+@body_background_color:rgb(233,233,233);
 
 .set_font() {
   font: 10px "Lucida Grande", "Helvetica Nueue", Arial, sans-serif;
@@ -45,7 +46,7 @@ ul, li{margin:0px;padding:0px;}
 }
 
 body{
-  background:rgb(233,233,233);
+  background:@body_background_color;
   text-align:left;
   padding: 0px;
   margin: 0px;
@@ -87,7 +88,7 @@ body{
   bottom:0px;
   border:none;
   border-top:2px inset rgb(211,211,211);
-  
+
 //  .rounded_corner_top_left(13px);
 //  .rounded_corner_top_right(13px);
   #change_name_form {
@@ -107,7 +108,7 @@ body{
 .node {
   clear:both;
   z-index:100;
-  
+
   .holder {
     position:relative;
     float:left;
@@ -117,7 +118,7 @@ body{
     background:@node_border_color;
     overflow:hidden;
     padding-left:2px;
-    
+
     .button {
       display:block;
       .rounded_corners(@holder_button_size);
@@ -139,7 +140,7 @@ body{
         display:block;
       }
     }
-  
+
     .tooltip {
       position:absolute;
       width:600px;
@@ -171,17 +172,17 @@ body{
     float:left;
     min-height:@node_size - @node_border_size * 2;
     min-width:@node_size * 4;
-    
+
     margin-top:@node_border_size;
     margin-right:@node_border_size;
     margin-bottom:@node_border_size;
-    
+
     .shadow(0px, 0px, 10px, rgba(210, 210, 210, 0.83021));
-    
+
     background:@node_background_color;
     .rounded_corner_top_right(@node_size * 0.1);
     .rounded_corner_bottom_right(@node_size * 0.1);
-    
+
     padding-top:@node_size / 5;
     padding-left:@node_size / 5 * 2;
     padding-right:@node_size / 5;
@@ -260,12 +261,17 @@ body{
     background: url('../images/select2.png') center #000;
 }
 
-.ui-dialog{
-    background:orange;
-    #error{
-        background:pink;
-        z-index:999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999876543210;
-        display:none;
-        border:1px solid black;
-    }
+
+#error {
+  position:absolute;
+  left:0px;
+  top:0px;
+  color:@body_background_color;
+  background:@body_background_color;
+  font-size:110%;
+  padding:11px;
+  .rounded_corner_bottom_right(16px);
+  //display:none;
+  border:none;
+  font-weight:bold;
 }

@@ -16,7 +16,7 @@ var initNode = function (_node) {
     var body = node.find(".body");
     var canvas = $("#canvas");
     var left, top;
-    
+
     // nice initial position
     var par = $('#'+node[0].id.slice(0, -2));
     if(par && par.length) {
@@ -28,12 +28,12 @@ var initNode = function (_node) {
         left = canvas.offset().left + canvas.width() / 2;
         top = canvas.offset().top + canvas.height() / 2;
     }
-    
+
     /*
     left = canvas.offset().left + canvas.width() / 2;
     top = canvas.offset().top + canvas.height() / 2;
     */
-    
+
     node.css({left: left, top: top});
     //node.css({left:canvas.width() / 2, top:canvas.height() / 2});
     node.hover(
@@ -86,17 +86,17 @@ $('#change_name').val( initial_name )
 
   // less debug typing
   var clog = function(str){ console.log(str) }
-  
-  
+
+
   // json
   var json_plz = function(obj){
     return JSON.stringify(obj)
   }
-  
+
   var id_for_html = function(arr){
     return 'n_' + arr.join('_')
   }
-  
+
   var id_for_json = function(obj){
     a = []
     $.each(obj.slice(2).split('_'), function(cur,ele){
@@ -104,29 +104,24 @@ $('#change_name').val( initial_name )
     })
     return a
   }
-  
+
   // overlayss
   var error_msg = function(text){
     if(!text){
       text = '!!!'
     }
-    $('#error').text( 'Error: ' + text )
-    $( "#error" ).dialog(
-    {
-//        modal:true,
-//        'position': [3,3],
-        buttons:
-        {
-          "Ok": function() { $(this).dialog("close"); },
-        }
-     });
-   //$( "#error" ).dialog( "option", "buttons" );
+    $('#error').text( 'Error: ' + text ).
+        animate({backgroundColor:"red"},100);
+    setTimeout(function () {
+        $('#error').animate({backgroundColor:$('body').css("backgroundColor")}, 1000)
+    }, 5000);
   }
+
   // triggers
   var get_node_id = function(ele){
-    return $(ele).parents('.node')[0].id  
+    return $(ele).parents('.node')[0].id
   }
-  
+
   // visual
   var fade_and_remove = function(html_id) {
     var current  = $('#' + html_id);
@@ -165,7 +160,7 @@ $(window).resize(function () {
   var socket = new io.Socket(location.hostname, {
     transports: ['websocket', 'xhr-polling', 'xhr-multipart', 'server-events', 'htmlfile', 'flashsocket']
   });
-  
+
   socket.on('connect', function() {
     console.log('socket connected');
   });
@@ -389,7 +384,7 @@ $("input.in-place-edit").live('blur', function () {
 socket.on('message', function(msg) {
   console.log('message incoming: ', msg);
   msg = JSON.parse( msg )
-  
+
   for ( prop in  msg){
     if (typeof msg[prop] !== 'function'){ // enum only props
       val = msg[prop]
@@ -400,7 +395,7 @@ socket.on('message', function(msg) {
         break;case 'err':
           error_msg(val.msg)
         break;case 'registered':
-          append_user(val.id, val) 
+          append_user(val.id, val)
         break;case 'left':
           fade_and_remove( $('#user_' + html_for_id(val.id)) )
         break;case 'node_data':
@@ -408,18 +403,18 @@ socket.on('message', function(msg) {
           // build hash string
           console.log(val.bubble)
                     console.log(val.bubble.hashes.length)
-          
+
           if( val.bubble.hasOwnProperty('hashes') ){
               hash_string = ''
 //              if( val.bubble.hashes.length == 3 ){
   //              hash_string = hash_string.concat( '<a href="' + location.host + '/' + val.bubble.hashes[0] + '">admin version</a>' )
     //          }
-              
+
               if( val.bubble.hashes.length >= 2 ){
                 hash_string = hash_string.concat( '<a href="http://' + location.host + '/' + (val.bubble.hashes[val.bubble.hashes.length - 2]) + '">main version,</a> ')
               }
               hash_string = hash_string.concat( '<a href="http://' + location.host + '/' + val.bubble.hashes[val.bubble.hashes.length - 1] + '">read-only version</a>')
-              
+
               if( val.bubble.hashes.length == 0 ){
                 READONLY = true
               }
@@ -439,27 +434,27 @@ socket.on('message', function(msg) {
         break;case 'node_added':
           draw_node(val, val.to)
           ani_man.animate(1500, 3);
-          
+
           //Width fix
           var obj = $("#"+val.id);
           obj.width(obj.find(".body").width()+33+obj.find(".holder").width());
           obj.height(obj.find(".body").height()+13);
 
         break;case 'node_moved':
-          // .. 
+          // ..
         break;case 'node_deleted':
             jq_delete = $('#'+id_for_html(val.id))
             springs_physics.remove( jq_delete[0].ida );
             delete_with_children( jq_delete );
         break;case 'position_changed':
-          // .. 
+          // ..
         break;case 'content_edited':
           $('#' + id_for_html(val.id) + ' p').text(val.content);
-          // .. 
+          // ..
         break;case 'bubble_created':
           location.href = '/' + val.hash
         break;default:
-          // .. 
+          // ..
         break;
       }
     }
