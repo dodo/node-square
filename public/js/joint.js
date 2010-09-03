@@ -260,17 +260,19 @@ var springsPhysics = function () {
 
     var animate = system.animate = function (engine, dt) {
         $.each(engine.nodes, function (_, node) {
-            var pos = vsub(node.position, node.middle);
-            node.object.animate({left:pos.x, top:pos.y}, dt);
+            if(!(node.object.hasClass("moving"))) {
+                var pos = vsub(node.position, node.middle);
+                node.object.animate({left:pos.x, top:pos.y}, dt);
+            }
         });
         return engine;
     };
 
-    var update_node = system.update_node = function (engine, nodeid) {
-        if(nodeid in engine.nodes) {
+    var update_node = system.update_node = function (engine, jqnode) {
+        if(jqnode[0].id in engine.nodes) {
             var window = $("#nodes");
-            var node = engine.nodes[nodeid];
-            var composition = _position_helper(window.offset(), node.object);
+            var node = engine.nodes[jqnode[0].id];
+            var composition = _position_helper(window.offset(), jqnode);
             node.position = composition.position;
             node.middle = composition.middle;
             node.offset = composition.offset;

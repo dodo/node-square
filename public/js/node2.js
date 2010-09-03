@@ -62,7 +62,7 @@ var initNode = function (_node) {
     );
     node.css({height:Math.max(body.height(),holder_min_height)+1,
                width:holder.width()+body.width()+23,
-               position:"absolute"
+               position:"absolute",
              });
 };
 
@@ -134,13 +134,17 @@ $('#change_name').val( initial_name )
 // draggable
 var draggable_options = {
     stop: function () {
-        springs_physics.update($(this)[0].id);
+        $(this).removeClass("moving");
+        springs_physics.update($(this));
         //springs_physics.live_render(10, 42, 500);
         ani_man.animate(500);
     },
     drag: function () {
-        springs_physics.update($(this)[0].id);
+        springs_physics.update($(this));
         springs_physics.static();
+    },
+    start: function () {
+        $(this).addClass("moving");
     }
 }
 var droppable_options = {
