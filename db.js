@@ -4,7 +4,7 @@ var random_hash = exports.random_hash = function() {
     hash = "";
     for(var n = 0; n < 16; n++) {
         var rand = Math.floor(Math.random()*62);
-        
+
         // move it to nice ascii values
         rand += 48;
         if(rand > 57) {
@@ -13,8 +13,8 @@ var random_hash = exports.random_hash = function() {
         if(rand > 90) {
             rand += 6;
         }
-        
-        hash += String.fromCharCode(rand);  
+
+        hash += String.fromCharCode(rand);
     }
     return hash;
 }
@@ -28,17 +28,17 @@ exports.connect = function(cb) {
         process.env['MONGO_NODE_DRIVER_HOST'] : 'localhost';
     var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ?
         process.env['MONGO_NODE_DRIVER_PORT'] : mongo.Connection.DEFAULT_PORT;
-    
+
     var client = new mongo.Db('node2', new mongo.Server(host, port, {}));
-    
+
     client.open(function(err, client) {
         var con = {client: client};
-        
+
         con.create_bubble = function(content, name, color, cb) {
             var bubble, mindmap, node, user_id = 23;
-            
+
             console.log("creating bubble")
-            
+
             client.collection('bubbles', function(err, coll) {
                 if(err) {
                     console.log(err);
@@ -46,7 +46,7 @@ exports.connect = function(cb) {
                     cb(null);
                 } else {
                     console.log("collection found");
-                    
+
                     node = create_node(content, user_id);
                     mindmap = {content: content, subs: [node]};
                     bubble = {
@@ -54,8 +54,9 @@ exports.connect = function(cb) {
                         content: content,
                         subs: [mindmap],
                         users: {23: {name: name, color: color}},
+                        messages: [],
                     };
-                    
+
                     coll.insert(bubble, function(err, res) {
                         if(err) {
                             console.log(err);
@@ -69,15 +70,15 @@ exports.connect = function(cb) {
                 }
             });
         }
-        
+
         var get_bubble = con.get_bubble = function(hash) {
             var bubble = {hash: hash};
-            
+
             var findOne = function(criteria, select, cb) {
                 criteria.hashes = bubble.hash;
-                
+
                 console.log(criteria)
-                
+
                 client.collection('bubbles', function(err, coll) {
                     if(err) {
                         console.log(err);
@@ -94,15 +95,15 @@ exports.connect = function(cb) {
                                 cb(res);
                             }
                         }
-                        
+
                         coll.findOne(criteria, {fields: select}, find_cb);
                     }
                 });
             }
-            
+
             var update = function(criteria, data, cb) {
                 criteria.hashes = bubble.hash;
-                
+
                 client.collection('bubbles', function(err, coll) {
                     coll.update(criteria, data, function(err, res) {
                         if(err) {
@@ -115,15 +116,15 @@ exports.connect = function(cb) {
                     });
                 });
             }
-            
+
             bubble.get_tree = function(cb) {
                 findOne({}, undefined, cb);
             }
-            
+
             // TODO: db-interaction at creation
             bubble.create_user = function(name, color, cb) {
                 var user = {name: name, color: color};
-                
+
                 user.rename = function(name, cb) {
                     diff = {}
                     diff["users."+user.id+".name"] = name
@@ -135,7 +136,7 @@ exports.connect = function(cb) {
                         }
                     );
                 }
-                
+
                 var set_color = user.set_color = function(color, cb) {
                     diff = {};
                     diff["users."+user.id+".color"] = color;
@@ -147,16 +148,16 @@ exports.connect = function(cb) {
                         }
                     );
                 }
-                
+
                 findOne({}, {'users': 1}, function(res) {
                     console.log("asmdsa")
                     console.log(res)
-                    
+
                     if(!res) {
                         cb(null)
                         return;
                     }
-                    
+
                     // ugly ...
                     users = res.users;
                     for(id in users) {
@@ -165,7 +166,7 @@ exports.connect = function(cb) {
                             user.id = id;
                         }
                     }
-                    
+
                     if(user.id === undefined) {
                         console.log('creating user ...');
                         user.id = Math.floor(Math.random()*65536);
@@ -183,46 +184,56 @@ exports.connect = function(cb) {
                     }
                 });
             }
-            
+
+            bubble.message_chated = function(content, user, cb) {
+                findOne({}, {"messages":1}, function(res) {
+                    var buffer = res.messages;
+                    buffer.push({content:content, user:user});
+                    if(buffer.length > 15) buffer.shift();
+                    var diff = {"messages": buffer};
+                    update({}, {'$set': diff}, cb);
+                });
+            }
+
             bubble.edit_node = function(position, content, cb) {
                 var adress = "subs." + position.join('.subs.') + ".content";
                 var diff = {};
                 diff[adress] = content;
                 update({}, {'$set': diff}, cb);
             }
-            
+
             var add_node = bubble.add_node = function(position, content, user, cb) {
                 var adress = "subs." + position.join('.subs.') + ".subs";
                 var diff = {};
                 diff[adress] = create_node(content, user);
                 update({}, {'$push': diff}, cb);
             }
-            
+
             var del_node = bubble.del_node = function(position, cb) {
                 findOne({}, {}, function(res) {
                     var diff, subs = res.subs, cur = subs;
-                    
+
                     console.log("sub-move");
-                    
+
                     for(var i = 0; i < position.length - 2; i++) {
                         console.log(cur);
                         cur = cur[position[i]].subs
                     }
-                    
+
                     console.log(cur);
                     delete cur[position[position.length-1]];
                     console.log(cur);
-                    
+
                     update({}, res, cb);
                 });
             }
-            
+
             bubble.move_node = function(from, to, cb) {
                 // TODO: untetested and not even close to atomic
                 var adress = "subs." + position.join('.subs.');
                 var filter = {};
                 filter[adress] = 1;
-                
+
                 findOne({}, filter, function(res) {
                     del_node(from, function() {
                         add_node(to, res[position[position.lenth-1]], function() {
@@ -231,13 +242,13 @@ exports.connect = function(cb) {
                     });
                 });
             }
-            
+
             bubble.destroy = function() {
                 client.collection('bubbles', function(err, coll) {
                     coll.remove({hashes: hash});
                 });
             }
-            
+
             /*
             bubble.get_user = function(name, cb) {
                 findOne({'users.name': name}, {'users.$': 1}, function(err, res) {
@@ -249,20 +260,20 @@ exports.connect = function(cb) {
                     }
                 });
             }
-            
+
             bubble.create_user = function(name, color, cb) {
                 // TODO
                 cb(null);
             }
             */
-            
+
             return bubble;
         }
-        
+
         con.close = function() {
             client.close();
         }
-        
+
         cb(con);
     });
 }

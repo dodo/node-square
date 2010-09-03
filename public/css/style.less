@@ -131,6 +131,9 @@ body{
       .set_font();
     }
   }
+  #chat_form {
+    float:left;
+  }
   #change_name_form {
     label {
       margin-left:33px;
@@ -264,6 +267,34 @@ body{
   position:absolute;
   top:0px;
   left:0px;
+  padding:0px;
+  margin:0px;
+}
+
+#chat_window {
+  position:fixed;
+  height:123px;
+  left:0px;
+  bottom:36px;
+  width:100%;
+  overflow:hidden;
+  #messages {
+    p {
+      .time {
+        color:rgb(140,140,140);
+        font-size:90%;
+        padding-right:5px;
+      }
+      .announcement {
+        font-size:80%;
+        letter-spacing:0.1em;
+        color:rgb(100,100,100);
+      }
+      padding:0px;
+      margin:0px;
+      padding-left:4px;
+    }
+  }
 }
 
 .root {

@@ -1,9 +1,9 @@
 
 var springsPhysics = function () {
-
+    var system = {};
     // defaults
 
-    var _default = {
+    var _default = system.defaults = {
             length:   80,   // 100
             strength: 300,  // 500
             mass:     342,  // 342
@@ -35,7 +35,6 @@ var springsPhysics = function () {
     // library
 
     // header ---
-    var system = {};
     var constructor = system.generate = function (params) {
         if(typeof(params) == "undefined") params = _default;
         // TODO more params check
@@ -193,7 +192,7 @@ var springsPhysics = function () {
                         difflen = (1 - difflen/threshold) * threshold;
                     if(difflen > 1e2)
                         accel = vadd(accel,vmul(dir,
-                            (other.charge*other.charge)/difflen));
+                            (node.charge*other.charge)/difflen));
                     else accel = vadd(accel,vmul(dir,threshold));
                 }
             });

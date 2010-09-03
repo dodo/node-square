@@ -4,7 +4,7 @@ $(document).ready(function(){
 //do dodo
 var holder_min_height = 0;
 var READONLY = false
-var springs_physics = springsPhysics.generate()
+var springs_physics = springsPhysics.generate();
     springs_physics.static();
 
 var ani_man = springs_physics.ani_manager(42, 50);
@@ -110,7 +110,8 @@ $('#change_name').val( initial_name )
     if(!text){
       text = '!!!'
     }
-    $('#error').text( 'Error: ' + text ).
+    print_message("<em><strong>Error: " + text + "</strong></em>");
+    $('#error').text( "Error: " + text ).
         animate({backgroundColor:"red"},100);
     setTimeout(function () {
         $('#error').animate({backgroundColor:$('body').css("backgroundColor")}, 1000)
@@ -212,8 +213,8 @@ draw_node = function(node, par_id){
                   droppable( droppable_options ).
                   appendTo('#nodes').fadeIn(100);
     obj.find('p').text( node.content || ' ' );
-    console.log( $('#user_' + node.user).length )
-    $('.user_' + node.user).find('.holder').css('background', $('#user_' + node.user).css('color'));
+    console.log("affe", $('#user_' + node.user).length )
+    $('.user_' + node.user).find('.holder').css('backgroundColor', $('#user_' + node.user).css('color'));
     var par = $('#'+id_for_html(par_id));
     par.attr('relation',par.attr('relation')+','+html_id);
     initNode(obj, par);
@@ -261,6 +262,12 @@ console.log($(current))
 
 
 //...
+var send_message = function(content){
+  socket.send(json_plz({
+    chat_message: {'content': content}
+  }) )
+}
+
 var add_node =  function(content, to){
   socket.send(json_plz({
     add_node: {
@@ -340,13 +347,14 @@ $('.edit_content').live('click', function(){
   edit_content(node_id, content)
 })
 
-/*
-$('.node').function(){ //TODO jquery hook
-  var node_id = get_node_id(this)
-  var $DODOs = //...
-  change_position(node_id, content)
-})
-*/
+
+$('#chat_form').submit(function () {
+    var text = $('#chat_msg').val();
+    send_message(text);
+    $('#chat_msg').val('');
+    $('#chat_msg').focus();
+    return false;
+});
 
 $('#create_bubble_form').submit(function(){
   var name = $(this).find('input[type=text]').val();
@@ -399,9 +407,11 @@ socket.on('message', function(msg) {
         break;case 'err':
           error_msg(val.msg)
         break;case 'registered':
-          append_user(val.id, val)
+          append_user(val.id, val);
+          print_message("<span class='announcement'>"+val.name+" connected.</span>");
         break;case 'left':
           fade_and_remove( $('#user_' + html_for_id(val.id)) )
+          print_message("<span class='announcement'>"+val.name+" disconnected.</span>");
         break;case 'node_data':
           $('#bubble').text( val.bubble.content )
           // build hash string
@@ -430,6 +440,14 @@ socket.on('message', function(msg) {
           for (cur in val.bubble.users){
             append_user(cur, val.bubble.users[cur])
           }
+          for(var i = 0; i < val.bubble.messages.length ; i++) {
+              var msg = val.bubble.messages[i];
+              print_message("<em><span style='color:"+$('#user_' + msg.user).css('color')+"'>"+$('#user_' + msg.user).text()+"</span>: "+msg.content+"</em>");
+          }
+        break;case 'announcement':
+          print_message("<span class='announcement'>"+val.content+"</span>");
+        break;case 'message_chated':
+          print_message("<span style='color:"+$('#user_' + val.user).css('color')+"'>"+$('#user_' + val.user).text()+"</span>: "+val.content);
         break;case 'name_changed':
           $('#user_' + val.id).text( val.name )
         break;case 'color_changed':
@@ -443,6 +461,7 @@ socket.on('message', function(msg) {
           var obj = $("#"+val.id);
           obj.width(obj.find(".body").width()+33+obj.find(".holder").width());
           obj.height(obj.find(".body").height()+13);
+          edit_node_action(obj.find("p")); // FIXME check user (do this only if current user adds node)
 
         break;case 'node_moved':
           // ..
@@ -508,5 +527,17 @@ $('.realtime').click(function(){
         console.log("realtime off.");
     }
 });
-// close (document ready)
+
+// messages
+
+var print_message = function (msg) {
+    var date = new Date();
+    var p = function (n) {if(n < 10) return "" + 0 + n; else return n;};
+    var strdate = p(date.getHours())+":"+p(date.getMinutes())+":"+p(date.getSeconds());
+    $('#messages').append("<p> <span class='time'>["+strdate+"]</span>"+msg+"</p>");
+    $('#messages').animate({marginTop:$('#chat_window').height()-$('#messages').height()},200);
+};
+
+print_message("Welcome");
+//close (document ready)
 });

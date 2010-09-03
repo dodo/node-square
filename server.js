@@ -31,11 +31,11 @@ db.connect(function(dbc) {
     });
 
     app.configure('development', function(){
-        app.use(connect.errorHandler({ dumpExceptions: true, showStack: true })); 
+        app.use(connect.errorHandler({ dumpExceptions: true, showStack: true }));
     });
 
     app.configure('production', function(){
-       app.use(connect.errorHandler()); 
+       app.use(connect.errorHandler());
     });
 
     // Routes
@@ -67,61 +67,61 @@ db.connect(function(dbc) {
     if (!module.parent) {
         app.listen(parseInt(process.env.PORT) || 3000);
         console.log("server listening on port %d ...", app.address().port);
-        
+
         ios = io.listen(app);
-        
+
         var session_manager = session.session_manager();
-        
+
         ios.on('connection', function(client) {
             var bubble, session, user, rights = 0;
-            
+
             var error = function(msg) {
                 client.send(JSON.stringify({err: {msg: msg}}));
             }
-            
+
             client.send(JSON.stringify({
                 debug: {msg: 'hello world'}
             }) );
-            
+
             client.on('disconnect', function() {
                 console.log('bye client')
                 if(session) {
                     session.remove_client(client);
-                    session.broadcast(JSON.stringify({left: {name: user.name}}));
+                    session.broadcast(JSON.stringify({left: {id: user.id, name: user.name}}));
                 }
             });
-            
+
             client.on('error', error_catcher)
-        
+
             client.on('message', function(msg) {
                 if(session && !session.alive) {
                     console.log('clearing client from destroyed session');
                     console.log(session.alive)
                     session = null;
                 }
-                
+
                 try {
                     console.log("incoming: " + msg);
                     stanza = JSON.parse(msg);
-                    
+
                     // enter a chat
                     if(stanza.register) {
                         if(session) {
                             error("Already attached to a session");
                             return;
                         }
-                        
+
                         // TODO: move bubble into session?
                         d = stanza.register
-                        
+
                         // db-abstraction
                         bubble = dbc.get_bubble(d.hash);
-                        
+
                         // sending the tree
                         bubble.get_tree(function(tree) {
                             console.log("tree:");
                             console.log(tree);
-                                
+
                             if(tree) {
                                 for(var n = 0; n < tree.hashes.length; n++) {
                                     if(tree.hashes[n] == d.hash) {
@@ -129,23 +129,23 @@ db.connect(function(dbc) {
                                         rights = n;
                                     }
                                 }
-                                
+
                                 // send the info
                                 tree.hashes = tree.hashes.slice(0, rights + 1);
                                 client.send(JSON.stringify({node_data: {bubble: tree}}));
-                                
+
                                 if(rights > 0) {
                                     bubble.create_user(d.name, d.color, function(res) {
                                         user = res;
-                                        
+
                                         console.log('adding session to client');
-                                        
+
                                         // user/session management
                                         session = session_manager.get(d.hash);
-                                        session.broadcast({registered: {name: d.name, color: d.color}})
+                                        session.broadcast(JSON.stringify({registered: {id: user.id, name: d.name, color: d.color}}));
                                         session.add_client(client);
-                                        
-                                        console.log(session)
+
+                                        console.log("session:",session)
                                     });
                                 }
                             } else {
@@ -156,12 +156,12 @@ db.connect(function(dbc) {
                     // create a bubble
                     } else if(stanza.create_bubble) {
                         d = stanza.create_bubble
-                        
+
                         if(d.user_name.trim() === '' || d.bubble_name === '') {
                             error("Invalid name");
                             return;
                         }
-                        
+
                         dbc.create_bubble(d.bubble_name, d.user_name, d.user_color, function(bubble) {
                             client.send(JSON.stringify({
                                 bubble_created: {hash: bubble.hash},
@@ -183,16 +183,19 @@ db.connect(function(dbc) {
                     } else if(stanza.change_name) {
                         if(session) {
                             name = stanza.change_name.name;
-                            
+
                             if(name.trim() === '') {
                                 error("Invalid name");
                                 return;
                             }
-                            
+
+                            var old_name = user.name;
                             user.rename(name);
                             session.broadcast(JSON.stringify({name_changed: {
                               id:   user.id,
                               name: name,
+                            },announcement:{
+                              content: old_name + " is now " + name + ".",
                             }}));
                         } else {
                             error("No write permissions");
@@ -213,6 +216,22 @@ db.connect(function(dbc) {
                             });
                         } else {
                             error("No write permissions");
+                        }
+                    // send a message
+                    } else if(stanza.chat_message) {
+                        if(session) {
+                            d = stanza.chat_message;
+                            bubble.message_chated(d.content, user.id, function() {
+                                // tell your friends
+                                session.broadcast(JSON.stringify({
+                                  message_chated:{
+                                    user: user.id,
+                                    content: d.content,
+                                  }
+                                }) );
+                            });
+                        } else {
+                            error("No chatting allowed");
                         }
                     // move a node
                     } else if(stanza.move_node) {
