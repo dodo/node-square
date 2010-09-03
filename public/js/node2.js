@@ -48,7 +48,11 @@ var initNode = function (_node) {
     }).parent().animate({height:h},100);
     holder.hover(
         function () {
-            var h = Math.max(holder_min_height,13+parseInt($(this).parent().find(".body").height()));
+            var h = holder_min_height;
+            if($(this).parent().hasClass("root")) {
+                h -= $(this).find(".button").height()+7;
+            }
+            h = Math.max(h,13+parseInt($(this).parent().find(".body").height()));
             $(this).find(".button").css("visibility","visible");
             $(this).animate({width:'+=15px', height:h}, 50, function () {
                 $(this).css("overflow","visible");
@@ -58,7 +62,7 @@ var initNode = function (_node) {
             $(this).css("overflow","hidden");
             $(this).animate({width:'-=15px', height:h}, 50, function () {
                 $(this).find(".button").css("visibility","hidden");
-            }).parent().animate({left:'+=15px',width:'-=20px',height:h},50);} //handleOut
+            }).parent().animate({left:'+=15px',width:'-=16px',height:h},50);} //handleOut
     );
     node.css({height:Math.max(body.height(),holder_min_height)+1,
                width:holder.width()+body.width()+23,
