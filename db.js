@@ -274,6 +274,16 @@ exports.connect = function(cb) {
             client.close();
         }
 
-        cb(con);
+        var user = process.env['MONGO_USER'];
+        var pass = process.env['MONGO_PASSWORD'];
+
+        if(user && pass) {
+            console.log('authenticating');
+            client.authenticate(user, pass, function() {
+                cb(con);
+            });
+        } else {
+            cb(con);
+        }
     });
 }
