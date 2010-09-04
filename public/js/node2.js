@@ -83,6 +83,7 @@ var initial_name  = $.cookie('name')
 var initial_color = $.cookie('color')
 if( !initial_name ){ initial_name = 'unknown' } // TODO overlay
 if( !initial_name ){ initial_color = 'black' }
+$.cookie('name',initial_name);
 
 $('#change_name').val( initial_name )
 
@@ -344,9 +345,9 @@ var append_user = function(id, cur){
 
 $('#change_name_form').submit(function(){
   var name = $(this).find('input[type=text]').val()
-  var color = $(this).find('#colorpicker div').css('backgroundColor')
-  change_name(name)
-  return false
+  //var color = $(this).find('#colorpicker div').css('backgroundColor')
+  change_name(name);
+  return false;
 })
 
 
@@ -481,14 +482,16 @@ socket.on('message', function(msg) {
         break;case 'node_added':
           draw_node(val, val.to);
           var html_id = id_for_html(val.to) + '_' + ($('.'+ id_for_html(val.to)).length-1 );
+          var name = $.cookie('name');
+          var user = $('#user_' + val.user);
 
           //Width fix
           var obj = $("#"+html_id);
           obj.addClass("fixed");
           obj.width(obj.find(".body").width()+33+obj.find(".holder").width());
           obj.height(obj.find(".body").height()+13);
-          console.log("ijojji",obj.find("p"));
-          edit_node_action(obj.find("p")); // FIXME check user (do this only if current user adds node)
+          if(name == user.text())
+            edit_node_action(obj.find("p"));
           ani_man.animate(1500, 3);
 
         break;case 'node_moved':
@@ -549,7 +552,10 @@ $('.realtime').click(function(){
     ani_man.toggle();
     if(ani_man.running()) {
         $('.realtime').animate({backgroundColor:"red"},100);
-        springs_physics.modify_joints(0,{length: 100});
+        springs_physics.modify_joints(0,{
+            length: 100,
+            strength: 500,
+        });
         springs_physics.modify_nodes(0,{
             friction: 0.9,
             charge: 850,
@@ -557,7 +563,10 @@ $('.realtime').click(function(){
         console.log("realtime on.");
     } else {
         $('.realtime').animate({backgroundColor:$('#nonerealtime').css("backgroundColor")},100);
-        springs_physics.modify_joints(0,{length: 80});
+        springs_physics.modify_joints(0,{
+            length: 80,
+            strength: 300,
+        });
         springs_physics.modify_nodes(0,{
             friction: 0.5,
             charge: 800,
