@@ -48,6 +48,7 @@ var initNode = function (_node) {
     }).parent().animate({height:h},100);
     holder.hover(
         function () {
+            if($(this).parent().hasClass("moving")) return;
             var h = holder_min_height;
             if($(this).parent().hasClass("root")) {
                 h -= $(this).find(".button").height()+7;
@@ -58,6 +59,7 @@ var initNode = function (_node) {
                 $(this).css("overflow","visible");
             }).parent().animate({left:'-=15px',width:'+=16px',height:h},50);},//handleIn
         function () {
+            if($(this).parent().hasClass("moving")) return;
             var h = 13+parseInt($(this).parent().find(".body").height());
             $(this).css("overflow","hidden");
             $(this).animate({width:'-=15px', height:h}, 50, function () {

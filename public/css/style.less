@@ -278,7 +278,16 @@ body{
   bottom:36px;
   width:100%;
   overflow:hidden;
+  #shadow {
+    position:relative;
+    z-index:0;
+    width:100%;
+    height:50px;
+    margin-top:-50px;
+    .shadow(-10px, 20px, 30px, @body_background_color);
+  }
   #messages {
+    z-index:-1;
     p {
       .time {
         color:rgb(140,140,140);
