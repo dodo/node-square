@@ -543,9 +543,19 @@ $('.realtime').click(function(){
     ani_man.toggle();
     if(ani_man.running()) {
         $('.realtime').animate({backgroundColor:"red"},100);
+        springs_physics.modify_joints(0,{length: 100});
+        springs_physics.modify_nodes(0,{
+            friction: 0.9,
+            charge: 850,
+        });
         console.log("realtime on.");
     } else {
         $('.realtime').animate({backgroundColor:$('#nonerealtime').css("backgroundColor")},100);
+        springs_physics.modify_joints(0,{length: 80});
+        springs_physics.modify_nodes(0,{
+            friction: 0.5,
+            charge: 800,
+        });
         console.log("realtime off.");
     }
 });
