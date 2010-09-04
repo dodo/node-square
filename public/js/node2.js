@@ -476,14 +476,17 @@ socket.on('message', function(msg) {
           $('#user_' + val.id).css('color', val.color)
           $('.user_' + val.id).find('.holder').css('background', val.color);//.css('border', '1px solid ' + val.color)
         break;case 'node_added':
-          draw_node(val, val.to)
-          ani_man.animate(1500, 3);
+          draw_node(val, val.to);
+          var html_id = id_for_html(val.to) + '_' + ($('.'+ id_for_html(val.to)).length-1 );
 
           //Width fix
-          var obj = $("#"+val.id);
+          var obj = $("#"+html_id);
+          obj.addClass("fixed");
           obj.width(obj.find(".body").width()+33+obj.find(".holder").width());
           obj.height(obj.find(".body").height()+13);
+          console.log("ijojji",obj.find("p"));
           edit_node_action(obj.find("p")); // FIXME check user (do this only if current user adds node)
+          ani_man.animate(1500, 3);
 
         break;case 'node_moved':
           // ..
