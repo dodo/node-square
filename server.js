@@ -79,6 +79,10 @@ db.connect(function(dbc) {
                 client.send(JSON.stringify({err: {msg: msg}}));
             }
 
+            var server_info = function(msg_hash) {
+                client.send(JSON.stringify({info: msg_hash}));
+            }
+
             client.send(JSON.stringify({
                 debug: {msg: 'hello world'}
             }) );
@@ -148,6 +152,10 @@ db.connect(function(dbc) {
                                         console.log("session:",session)
                                     });
                                 }
+                            } else if(d.hash === ''){
+                                server_info({
+                                  silent: 'true'
+                                })
                             } else {
                                 // TODO: close connection?
                                 error("Unknown Hash");
@@ -299,3 +307,4 @@ db.connect(function(dbc) {
         });
     }
 });
+

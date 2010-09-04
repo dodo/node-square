@@ -1,9 +1,9 @@
-
 $(document).ready(function(){
 
+var READONLY = false
+var SILENT   = false
 //do dodo
 var holder_min_height = 0;
-var READONLY = false
 var springs_physics = springsPhysics.generate();
     springs_physics.static();
 
@@ -193,7 +193,16 @@ $(window).resize(function () {
     console.log('socket connected');
   });
 
-// messages to server
+///// messages to server
+
+// send helper
+var send = function(what, hash){
+  if(!SILENT){
+    to_send = {};
+    to_send[what] = hash;
+    socket.send(json_plz( to_send ));
+  }
+}
   // user management
 var register = function(name, color, hash){
   socket.send(json_plz({
@@ -207,20 +216,16 @@ var register = function(name, color, hash){
 
 var change_name = function(name){
   $.cookie('name', name)
-  socket.send(json_plz({
-    change_name: {
-      'name': name
-    }
-  }) )
+  send('change_name', {
+      'name': name,
+  });
 }
 
 var change_color = function(color){
   $.cookie('color', color)
-  socket.send(json_plz({
-    change_color: {
-      'color': color
-    }
-  }) )
+  send('change_color', {
+      'color': color,
+  });
 }
 
 // changing tree structure
@@ -283,12 +288,11 @@ console.log($(current))
 //    fade_and_remove( $(current)[0].id )
 }
 
-
 //...
 var send_message = function(content){
-  socket.send(json_plz({
-    chat_message: {'content': content}
-  }) )
+  send( 'chat_message', {
+    content: content,
+  })  
 }
 
 var add_node =  function(content, to){
@@ -429,6 +433,8 @@ socket.on('message', function(msg) {
           console.log('_debug: ' + val.msg)
         break;case 'err':
           error_msg(val.msg)
+        break;case 'info':
+          SILENT = true
         break;case 'registered':
           append_user(val.id, val);
           print_message("<span class='announcement'>"+val.name+" connected.</span>");
@@ -588,3 +594,4 @@ var print_message = function (msg) {
 print_message("Welcome");
 //close (document ready)
 });
+
