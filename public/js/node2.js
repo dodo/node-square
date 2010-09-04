@@ -458,7 +458,6 @@ socket.on('message', function(msg) {
           console.log('hs' + hash_string)
           $('#hashes').html( hash_string )
           // draw
-          draw_all_nodes(val.bubble)
           for (cur in val.bubble.users){
             append_user(cur, val.bubble.users[cur])
           }
@@ -466,6 +465,7 @@ socket.on('message', function(msg) {
               var msg = val.bubble.messages[i];
               print_message("<em><span style='color:"+$('#user_' + msg.user).css('color')+"'>"+$('#user_' + msg.user).text()+"</span>: "+msg.content+"</em>");
           }
+          draw_all_nodes(val.bubble);
         break;case 'announcement':
           print_message("<span class='announcement'>"+val.content+"</span>");
         break;case 'message_chated':
