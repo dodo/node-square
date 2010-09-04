@@ -585,7 +585,7 @@ $('.realtime').click(function(){
 
 var print_message = function (msg) {
     var date = new Date();
-    var p = function (n) {if(n < 10) return "" + 0 + n; else return n;};
+    var p = function (n) {return n < 10 ? "0" + n : n;};
     var strdate = p(date.getHours())+":"+p(date.getMinutes())+":"+p(date.getSeconds());
     $('#messages').append("<p> <span class='time'>["+strdate+"]</span>"+msg+"</p>");
     $('#messages').animate({marginTop:$('#chat_window').height()-$('#messages').height()},200);
