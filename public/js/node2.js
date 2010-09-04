@@ -458,8 +458,11 @@ socket.on('message', function(msg) {
           console.log('hs' + hash_string)
           $('#hashes').html( hash_string )
           // draw
+          var name = $.cookie('name');
           for (cur in val.bubble.users){
-            append_user(cur, val.bubble.users[cur])
+            append_user(cur, val.bubble.users[cur]);
+            if(val.bubble.users[cur].name == name)
+                $('#colorpicker').css('backgroundColor',val.bubble.users[cur].color);
           }
           for(var i = 0; i < val.bubble.messages.length ; i++) {
               var msg = val.bubble.messages[i];
