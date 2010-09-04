@@ -175,8 +175,8 @@ var springsPhysics = function () {
                 if(relation != "") {
                     var target = $("#"+relation);
                     if(target.length) {
-                        nodes[cur_node.id].joints[target[0].id] =
-                            joints.push({
+                        joints.push(
+                            nodes[cur_node.id].joints[target[0].id] = {
                                 source: cur_node,
                                 target: target[0].id,
                                 length: params.length,
@@ -334,8 +334,8 @@ var springsPhysics = function () {
             if(relation != "") {
                 var target = $("#"+relation);
                 if(target.length) {
-                    engine.nodes[nodeid].joints[target[0].id] =
-                        engine.joints.push({
+                    engine.joints.push(
+                        engine.nodes[nodeid].joints[target[0].id] = {
                             source: cur_node,
                             target: engine.nodes[target[0].id], // error source
                             length: engine.params.length,
@@ -348,19 +348,29 @@ var springsPhysics = function () {
         return add_joint_to_node(engine, nodeid, parid);
     };
 
-    var remove_node = system.remove_node = function (engine, nodeid) {
+    var remove_node = system.remove_node = function (engine, nodeid,recursive) {
         if(nodeid in engine.nodes) {
+            var kill = [];
             var node = engine.nodes[nodeid];
+            console.log("remove",node);
             $.each(node.joints, function (_, joint) {
-                $.each(engine.joints, function (index, other) {
-                    //dirty but quick to code -.-
-                    if(joint.target.id == other.target.id && joint.source.id == other.source.id ){
-                      delete engine.joints[index];
-                    } else if(joint.target.id == nodeid) {
-                      delete engine.joints[index];
-                    }
-                });
+                console.log("j",joint,_);
+                remove_node(engine,joint.target.id,1);
+                kill.push(engine.joints.indexOf(joint));
             });
+            kill.sort(function (a,b) {return a - b;});
+            while(kill.length) engine.joints.splice(kill.pop(),1);
+            if(!recursive) {
+                for(var i = 0; i < engine.joints.length; i++) {
+                    var joint = engine.joints[i];
+                    if(joint.target.id == nodeid) {
+                        engine.joints.splice(i,1);
+                        delete joint.source.joints[nodeid];
+                        break;
+                    }
+                }
+                draw(engine);
+            }
             delete engine.nodes[nodeid];
         } else console.error("unknown node id",nodeid);
         return engine;
@@ -370,7 +380,7 @@ var springsPhysics = function () {
         if((parid in engine.nodes) && (nodeid in engine.nodes)) {
             var par = engine.nodes[parid];
             var node = engine.nodes[nodeid];
-            par.joints[node.id] = engine.joints.push({
+            engine.joints.push( par.joints[node.id] = {
                     source: par,
                     target: node,
                     length: engine.params.length,

@@ -498,7 +498,7 @@ socket.on('message', function(msg) {
           // ..
         break;case 'node_deleted':
             jq_delete = $('#'+id_for_html(val.id))
-            springs_physics.remove( jq_delete[0].ida );
+            springs_physics.remove( jq_delete[0].id );
             delete_with_children( jq_delete );
         break;case 'position_changed':
           // ..
