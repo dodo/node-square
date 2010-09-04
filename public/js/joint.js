@@ -293,16 +293,22 @@ var springsPhysics = function () {
         return engine;
     };
 
-    var update_node = system.update_node = function (engine, jqnode) {
+    var update_node = system.update_node = function (engine, jqnode, params) {
         if(jqnode[0].id in engine.nodes) {
-            var window = $("#nodes");
             var node = engine.nodes[jqnode[0].id];
-            var composition = _position_helper(window.offset(), jqnode);
-            node.position = composition.position;
-            node.middle = composition.middle;
-            node.offset = composition.offset;
-            node.size = composition.size;
-        }
+            if(typeof(params) == "undefined") {
+                var window = $("#nodes");
+                var composition = _position_helper(window.offset(), jqnode);
+                node.position = composition.position;
+                node.middle = composition.middle;
+                node.offset = composition.offset;
+                node.size = composition.size;
+            } else {
+                for(var param in params) {
+                    node = interpret_userinput(node, param, params[param]);
+                }
+            }
+        } else console.error("unknown node id",jqnode[0].id);
         return engine;
     };
 
@@ -356,7 +362,7 @@ var springsPhysics = function () {
                 });
             });
             delete engine.nodes[nodeid];
-        }
+        } else console.error("unknown node id",nodeid);
         return engine;
     };
 
@@ -370,6 +376,9 @@ var springsPhysics = function () {
                     length: engine.params.length,
                     strength: engine.params.strength,
                 });
+        } else {
+            if(!(parid in engine.nodes)) console.error("unknown parent node id",parid);
+            if(!(nodeid in engine.nodes)) console.error("unknown node id",nodeid);
         }
         return engine;
     };
