@@ -159,8 +159,23 @@ var droppable_options = {
       move_node(this.id, ui.draggable[0].id)
 	}
 }
+var __offset;
 $(".draggable").draggable( draggable_options );
 $(".draggable").droppable( droppable_options );
+$("#mover").draggable({
+    start: function () {__offset = {top:0, left:0};},
+    drag: function (_,ui) {
+        springs_physics.modify_nodes(0,{
+            'position.x': "+=" + (ui.position.left - __offset.left),
+            'position.y': "+=" + (ui.position.top  - __offset.top)
+        });
+        __offset.left = ui.position.left;
+        __offset.top  = ui.position.top;
+        ui.position.left = 0;
+        ui.position.top  = 0;
+    }
+});
+
 $(window).resize(function () {
     springs_physics.static();
 });

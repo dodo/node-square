@@ -32,6 +32,22 @@ var springsPhysics = function () {
     var vnorm = function (vec) {if(vec.x == 0 && vec.y == 0)
         return vec; else return vmul(vec, 1 / vmag(vec));};
 
+    var interpret_uservalue = function (old,input) {
+        var parts = /^([+\-]=)?([\d+.\-]+)(.*)$/.exec(input);
+        var val = parseFloat(parts[2]);
+        if(isNaN(val))    return old;
+        else if(parts[1]) return old + ((parts[1] === "-=" ? -1 : 1) * val);
+        else              return val;
+    };
+
+    var interpret_userinput = function (obj, param, input) {
+        var ps = param.split(".");
+        var p = ps.shift();
+        if(ps.length == 0) obj[p] = interpret_uservalue(obj[p],input);
+        else if(p in obj)  obj[p] = interpret_userinput(obj[p],ps.join("."),input);
+        return obj;
+    };
+
     // library
 
     // header ---
@@ -111,13 +127,20 @@ var springsPhysics = function () {
 
             return manager;
         };
+        var modify_nodes = function (dt,params) {
+            return draw(animate(update_nodes(engine,params),dt));
+        };
+        var modify_joints = function (params) {
+            return draw(update_joints(engine,params));
+        };
         var add = function (nodeid,parid) {return add_node(engine,nodeid,parid);};
         var update = function (nodeid) {return update_node(engine,nodeid);};
         var remove = function (nodeid) {return remove_node(engine,nodeid);};
         var static = function () {return draw(engine);};
         return {realtime:realtime, step:step, pre_render:pre_render,
                 static:static, add:add, update:update, remove:remove,
-                live_render:live_render, ani_manager: ani_manager};
+                live_render:live_render, ani_manager: ani_manager,
+                modify_nodes:modify_nodes, modify_joints:modify_joints};
     };
 
     // body ---
@@ -344,6 +367,26 @@ var springsPhysics = function () {
                     length: engine.params.length,
                     strength: engine.params.strength,
                 });
+        }
+        return engine;
+    };
+
+    var update_nodes = system.update_nodes = function (engine, params) {
+        for(var nodeid in engine.nodes) {
+            var node = engine.nodes[nodeid];
+            for(var param in params) {
+                node = interpret_userinput(node, param, params[param]);
+            }
+        }
+        return engine;
+    };
+
+    var update_joints = system.update_joints = function (engine, params) {
+        for(var i = 0; i < engine.joints.length; i++) {
+            var joint = engine.joints[i];
+            for(var param in params) {
+                joint = interpret_userinput(joint, param, params[param]);
+            }
         }
         return engine;
     };
