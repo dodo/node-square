@@ -88,7 +88,8 @@ $('#change_name').val( initial_name )
 
 // helpers
   // firefox workaround
-  if(typeof(console) == 'undefined') console = {log: function () {}};
+  if(typeof(console) == 'undefined') console ={log: function () {},
+      error: function () {}, warn: function () {}, info: function () {}};
 
   // less debug typing
   var clog = function(str){ console.log(str) }

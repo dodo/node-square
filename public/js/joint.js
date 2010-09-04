@@ -43,8 +43,11 @@ var springsPhysics = function () {
     var interpret_userinput = function (obj, param, input) {
         var ps = param.split(".");
         var p = ps.shift();
-        if(ps.length == 0) obj[p] = interpret_uservalue(obj[p],input);
-        else if(p in obj)  obj[p] = interpret_userinput(obj[p],ps.join("."),input);
+        if(p in obj) {
+            if(ps.length == 0)
+                 obj[p] = interpret_uservalue(obj[p],input);
+            else obj[p] = interpret_userinput(obj[p],ps.join("."),input);
+        } else console.error("key",p,"not in",obj);
         return obj;
     };
 
