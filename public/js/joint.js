@@ -137,7 +137,7 @@ var springsPhysics = function () {
             return draw(update_joints(engine,params));
         };
         var add = function (nodeid,parid) {return add_node(engine,nodeid,parid);};
-        var update = function (nodeid) {return update_node(engine,nodeid);};
+        var update = function (nodeid,params) {return update_node(engine,nodeid,params);};
         var remove = function (nodeid) {return remove_node(engine,nodeid);};
         var static = function () {return draw(engine);};
         return {realtime:realtime, step:step, pre_render:pre_render,
