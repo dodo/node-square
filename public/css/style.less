@@ -21,6 +21,7 @@ h1, h2{
 }
 h1{
   font-size:20px;
+  padding-right:3px;
 }
 h2{
   font-size:11px;
@@ -46,6 +47,14 @@ ul, li{margin:0px;padding:0px;}
   z-index:55555555;
 }
 
+.bar_button(){
+  .node.holder.button;
+  position:absolute;
+  float:right;
+  margin-left:-30px;
+  background:rgb(111,111,111);
+}
+
 body{
   background:@body_background_color;
   text-align:left;
@@ -67,20 +76,13 @@ body{
   .current_hash_link{
     text-decoration:underline !important;
   }
-}
-#delete_bubble{
-  .node.holder.button;
-  float:right;
-  z-index: 99999999999;
-  .tooltip {
-    .node.holder.tooltip;
-    .bubble {
-      .node.holder.tooltip.bubble;
-      .arrow {
-        .node.holder.tooltip.bubble.arrow;
-      }
-    }
+  .tooltip{
+    .node.holder.tooltip
   }
+}
+.delete_bubble{
+  .bar_button();
+  display:none;
 }
 
 #tool_bar {
@@ -94,11 +96,7 @@ body{
   border-top:2px inset rgb(211,211,211);
 
   .button {
-    .node.holder.button;
-    position:absolute;
-    float:right;
-    margin-left:-30px;
-    background:rgb(111,111,111);
+    .bar_button()
   }
   :hover {
     color:white;

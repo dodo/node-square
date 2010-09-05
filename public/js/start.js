@@ -5,9 +5,8 @@ node2.init_physics();
 
 node2.socket.connect();
 
-// TODO remove
-var initial_color = $.cookie('color')
-if( !initial_color ){ initial_color = 'black' }
+$('#change_name').val( $.cookie('name') || 'Anonymous' )
+var initial_color = $.cookie('color') || 'black' // TODO: no global var
 
 node2.register(
   $('#change_name').val(),

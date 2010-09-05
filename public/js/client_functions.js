@@ -125,6 +125,9 @@ node2.create_bubble = function(bubble_name, name, color){
   }) )
 }
 
+node2.delete_bubble = function(){
+  send('destroy', {})
+}
 
 /// manipulation of nodes
 

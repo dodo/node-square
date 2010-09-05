@@ -27,30 +27,34 @@ node2.socket.on('message', function(msg) {
         break;case 'left':
           node2.fade_and_remove( 'user_' + val.id )
           node2.print_message("<span class='announcement'>"+val.name+" disconnected.</span>");
-        break;case 'node_data':
-          $('#bubble').text( val.bubble.content )
+        break;case 'node_data': // received mindmap
           // build hash string
           console.log(val.bubble)
                     console.log(val.bubble.hashes.length)
 
-          if( val.bubble.hasOwnProperty('hashes') ){
+       //   if( val.bubble.hasOwnProperty('hashes') ){
               hash_string = ''
-//              if( val.bubble.hashes.length == 3 ){
-  //              hash_string = hash_string.concat( '<a class="hash_link" href="' + location.host + '/' + val.bubble.hashes[0] + '">admin version</a>' )
-    //          }
-
-              if( val.bubble.hashes.length >= 2 ){
-                hash_string = hash_string.concat( '<a class="hash_link" href="http://' + location.host + '/' + (val.bubble.hashes[val.bubble.hashes.length - 2]) + '">main version,</a> ')
+              if( val.bubble.hashes.length == 3 ){ // admin
+                hash_string = hash_string.concat( '<a class="hash_link" href="' + location.host + '/' + val.bubble.hashes[2] + '">admin version</a>, ' )
+                $('.delete_bubble').show();
               }
-              hash_string = hash_string.concat( '<a class="hash_link" href="http://' + location.host + '/' + val.bubble.hashes[val.bubble.hashes.length - 1] + '">read-only version</a>')
 
-              if( val.bubble.hashes.length == 1 ){
+              if( val.bubble.hashes.length >= 2 ){ // normal or admin
+                hash_string = hash_string.concat( '<a class="hash_link" href="http://' + location.host + '/' + (val.bubble.hashes[1]) + '">main version</a>, ')
+              }
+              hash_string = hash_string.concat( '<a class="hash_link" href="http://' + location.host + '/' + val.bubble.hashes[0] + '">read-only version</a>')
+
+              if( val.bubble.hashes.length == 1 ){ // readonly
                 node2.READONLY = true;
               }
+       //   }
+          if( val.bubble.hashes[0] != '' ){
+            $('#hashes').html( hash_string )
+            $('.hash_link:first').addClass('current_hash_link');
+          // set title
+            document.title =   val.bubble.content
           }
-          console.log('hs' + hash_string)
-          $('#hashes').html( hash_string )
-          $('.hash_link:first').addClass('current_hash_link');
+          $('#bubble').text( val.bubble.content )
           // draw
           var name = $.cookie('name');
           for (cur in val.bubble.users){
@@ -87,21 +91,20 @@ node2.socket.on('message', function(msg) {
           obj.height(obj.find(".body").height()+13);
           if(name == user.text())
             edit_node_action(obj.find("p"));
-          ani_man.animate(1500, 3);
+          node2.ani_man.animate(1500, 3);
 
         break;case 'node_moved':
           // ..
         break;case 'node_deleted':
             jq_delete = $('#'+id_for_html(val.id))
-            springs_physics.remove( jq_delete[0].id );
-            delete_with_children( jq_delete );
-        break;case 'position_changed':
-          // ..
+            node2.springs_physics.remove( jq_delete[0].id );
+            node2.delete_with_children( jq_delete );
         break;case 'content_edited':
           $('#' + node2.id_for_html(val.id) + ' p').text(val.content);
-          // ..
         break;case 'bubble_created':
           location.href = '/' + val.hash
+        break;case 'destroy': // TODO add message
+          location.href = "http://" + location.host
         break;default:
           // ..
         break;

@@ -54,8 +54,8 @@ $('.add_node').live('click', function(){
 
 $('.delete_node').live('click', function(){
   var node_id = id_for_json( get_node_id(this) )
-  node2.delete_node(node_id)
-  return false
+  node2.delete_node(node_id);
+  return false;
 })
 
 $('.edit_content').live('click', function(){
@@ -96,8 +96,15 @@ $('#chat_form').submit(function () {
 
 $('#create_bubble_form').submit(function(){
   var name = $(this).find('input[type=text]').val();
-  node2.create_bubble(name,  $.cookie('name'),  $.cookie('color'))
-  return false
+  node2.create_bubble(name,  $.cookie('name'),  $.cookie('color'));
+  return false;
+})
+
+
+$('.delete_bubble').click(function(){
+  node2.delete_bubble()
+  alert("ALERT BOX")
+  return false;
 })
 
 

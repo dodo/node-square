@@ -1,6 +1,11 @@
 #title_bar
   #title
-    <h1 id='bubble'>Node<sup>❷</sup></h1> <h2 id='hashes'>map your mind</h2>
+    = partial("button", [{symbol:"x", class:"delete_bubble", info:"burst bubble"}])
+    %h1#bubble
+      Node
+      %sup="❷"
+    %h2#hashes
+      ...and map your mind
 
 #tool_bar
   %form{id: 'chat_form'}
@@ -15,7 +20,7 @@
     %label{for:'change_name'}= "name"
     %input{type: 'submit', value: 'update'}
   %form{id: 'create_bubble_form'}
-    = partial("button", [{symbol:"⚗",class:"realtime",info:"crazy mode - nodes move in realtime"}])
+    = partial("button", [{symbol:"⚗", class:"realtime", info:"crazy mode - nodes move in realtime"}])
     .button#nonerealtime{style:"display:none"}
     %input{type: 'text', name: 'name', id: 'create_mindmap'}
     %label{for:'create_mindmap'}= "mindmap"

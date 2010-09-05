@@ -2,10 +2,15 @@
 
 ## TODO
 
-* Homepage (+ bubble creation)
-* ...
-* user documentation (start page creation with init_start.js)
+* holder fixen
+* prioritäten: größer/kleiner
 * "catch attention" with blinking nodes
+* spawn-position (add)
+* destroy bubble
+* tabs, multiple mms
+* bubble creation schöner (nur auf startseite)
+* end-design
+* ...
 
 ## Naming Conventions
 
@@ -110,25 +115,4 @@ node with
     }
 
 
-### todo
 
-spawn-position (add)
-
-node body verschwindet bug
-
-client delete
-
-read-only mm
-z-index top
-destroy
-
-
-startseite
-
-error-style
-end-design
-
-#### maybe
-
-drehding vom start
-logout (left)
