@@ -74,23 +74,29 @@ node2.send_message = function(content){
 }
 
 node2.add_node =  function(content, to){
-  send('add_node', {
-    'content': content,
-    'to': to,
+  if(!node2.READONLY){
+    send('add_node', {
+      'content': content,
+      'to': to,
     });
+  }
 }
 
 node2.move_node = function(id, to){
-  send('move_node', {
-    'id': id,
-    'to': to,
-  })
+  if(!node2.READONLY){
+    send('move_node', {
+      'id': id,
+      'to': to,
+    })
+  }
 }
 
 node2.delete_node = function(id){
-  send('delete_node', {
-   'id': id,
-  });
+  if(!node2.READONLY){
+    send('delete_node', {
+     'id': id,
+    });
+  }
 }
 
 // changing properties

@@ -155,7 +155,11 @@ db.connect(function(dbc) {
 
                                 // send the info
                                 tree.hashes = tree.hashes.slice(0, rights + 1);
-                                client.send(JSON.stringify({node_data: {bubble: tree}}));
+                                greeting = {node_data: {bubble: tree}}
+                                if( d.hash === '' ){
+                                    greeting.info = {silent: true}
+                                }
+                                client.send(JSON.stringify( greeting ));
 
                                 if(rights > 0) {
                                     bubble.create_user(d.name, d.color, function(res) {
@@ -171,10 +175,6 @@ db.connect(function(dbc) {
                                         console.log("session:",session)
                                     });
                                 }
-                            } else if(d.hash === ''){
-                                server_info({
-                                  silent: 'true'
-                                })
                             } else {
                                 // TODO: close connection?
                                 error("Unknown Hash");

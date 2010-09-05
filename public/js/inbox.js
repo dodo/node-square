@@ -25,8 +25,8 @@ node2.socket.on('message', function(msg) {
           append_user(val.id, val);
           node2.print_message("<span class='announcement'>"+val.name+" connected.</span>");
         break;case 'left':
-          fade_and_remove( 'user_' + val.id )
-          print_message("<span class='announcement'>"+val.name+" disconnected.</span>");
+          node2.fade_and_remove( 'user_' + val.id )
+          node2.print_message("<span class='announcement'>"+val.name+" disconnected.</span>");
         break;case 'node_data':
           $('#bubble').text( val.bubble.content )
           // build hash string
@@ -36,20 +36,21 @@ node2.socket.on('message', function(msg) {
           if( val.bubble.hasOwnProperty('hashes') ){
               hash_string = ''
 //              if( val.bubble.hashes.length == 3 ){
-  //              hash_string = hash_string.concat( '<a href="' + location.host + '/' + val.bubble.hashes[0] + '">admin version</a>' )
+  //              hash_string = hash_string.concat( '<a class="hash_link" href="' + location.host + '/' + val.bubble.hashes[0] + '">admin version</a>' )
     //          }
 
               if( val.bubble.hashes.length >= 2 ){
-                hash_string = hash_string.concat( '<a href="http://' + location.host + '/' + (val.bubble.hashes[val.bubble.hashes.length - 2]) + '">main version,</a> ')
+                hash_string = hash_string.concat( '<a class="hash_link" href="http://' + location.host + '/' + (val.bubble.hashes[val.bubble.hashes.length - 2]) + '">main version,</a> ')
               }
-              hash_string = hash_string.concat( '<a href="http://' + location.host + '/' + val.bubble.hashes[val.bubble.hashes.length - 1] + '">read-only version</a>')
+              hash_string = hash_string.concat( '<a class="hash_link" href="http://' + location.host + '/' + val.bubble.hashes[val.bubble.hashes.length - 1] + '">read-only version</a>')
 
-              if( val.bubble.hashes.length == 0 ){
-                READONLY = true
+              if( val.bubble.hashes.length == 1 ){
+                node2.READONLY = true;
               }
           }
           console.log('hs' + hash_string)
           $('#hashes').html( hash_string )
+          $('.hash_link:first').addClass('current_hash_link');
           // draw
           var name = $.cookie('name');
           for (cur in val.bubble.users){
@@ -57,9 +58,11 @@ node2.socket.on('message', function(msg) {
             if(val.bubble.users[cur].name == name)
                 $('#colorpicker').css('backgroundColor',val.bubble.users[cur].color);
           }
-          for(var i = 0; i < val.bubble.messages.length ; i++) {
-              var msg = val.bubble.messages[i];
-              node2.print_message("<em><span style='color:"+$('#user_' + msg.user).css('color')+"'>"+$('#user_' + msg.user).text()+"</span>: "+msg.content+"</em>");
+          if( val.bubble.messages ){
+              for(var i = 0; i < val.bubble.messages.length ; i++) {
+                  var msg = val.bubble.messages[i];
+                  node2.print_message("<em><span style='color:"+$('#user_' + msg.user).css('color')+"'>"+$('#user_' + msg.user).text()+"</span>: "+msg.content+"</em>");
+              }
           }
           node2.draw_all_nodes(val.bubble);
         break;case 'announcement':

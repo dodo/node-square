@@ -14,7 +14,7 @@ node2.error_msg = function(text){
   if(!text){
     text = '!!!'
   }
-  print_message("<em><strong>Error: " + text + "</strong></em>");
+  node2.print_message("<em><strong>Error: " + text + "</strong></em>");
   $('#error').text( "Error: " + text ).
       animate({backgroundColor:"red"},100);
   setTimeout(function () {

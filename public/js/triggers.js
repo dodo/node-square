@@ -5,6 +5,9 @@ $(function(){ /* triggers */
 
 // draggables
 node2.draggable_options = {
+    start: function () {
+        $(this).addClass("moving");
+    },
     stop: function () {
         $(this).removeClass("moving");
         node2.springs_physics.update($(this));
@@ -15,13 +18,10 @@ node2.draggable_options = {
         node2.springs_physics.update($(this));
         node2.springs_physics.static();
     },
-    start: function () {
-        $(this).addClass("moving");
-    }
 }
 node2.droppable_options = {
     drop: function(_, ui){
-      move_node(this.id, ui.draggable[0].id)
+      node2.move_node(this.id, ui.draggable[0].id)
   }
 }
 
@@ -150,11 +150,11 @@ $('.realtime').click(function(){
         console.log("realtime on.");
     } else {
         $('.realtime').animate({backgroundColor:$('#nonerealtime').css("backgroundColor")},100);
-        springs_physics.modify_joints(0,{
+        node2.springs_physics.modify_joints(0,{
             length: 80,
             strength: 300,
         });
-        springs_physics.modify_nodes(0,{
+        node2.springs_physics.modify_nodes(0,{
             friction: 0.5,
             charge: 800,
         });
@@ -163,17 +163,22 @@ $('.realtime').click(function(){
 });
 
 
-if(!node2.READONLY){
-    $('.node p').live('dblclick', function(){edit_node_action($(this));});
-    $('.edit.button').live('click',function(){edit_node_action($(this).parents(".node").find("p"));});
-}
+$('.node p').live('dblclick', function(){
+    edit_node_action($(this));
+});
+
+$('.edit.button').live('click',function(){
+    edit_node_action($(this).parents(".node").find("p"));
+});
 
 /// helper functions
 
 var edit_node_action = function (obj) {
-    var parent = obj.parent();
-    obj.replaceWith('<input type="text" class="in-place-edit" value="' + obj.text() + '" />').focus();
-    parent.find('input.in-place-edit').focus();
+    if(!node2.READONLY){ 
+        var parent = obj.parent();
+        obj.replaceWith('<input type="text" class="in-place-edit" value="' + obj.text() + '" />').focus();
+        parent.find('input.in-place-edit').focus();
+    }
 };
 
 var inplace_submit_and_restore_p = function(ele){
