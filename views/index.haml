@@ -9,7 +9,7 @@
 
 #tool.bar
   .sub.left
-    %form{id: 'chat'}
+    %form{id: 'chatter'}
       %input{type: 'text', name: 'msg', id: 'chat_msg'}
       %label{for:'chat_msg'}= "chat"
       %input{type: 'submit', value: 'send'}
@@ -17,13 +17,13 @@
     editing:
     %ul#user_list
   .sub.right
-    %form{id: 'change_name' }
+    %form{id: 'name_changer' }
       #colorpicker
       %input{type: 'text',   name: 'name', id: 'change_name'}
       %label{for:'change_name'}= "name"
       %input{type: 'submit', value: 'update'}
   .sub.right
-    %form{id: 'create_bubble'}
+    %form{id: 'bubble_creator'}
       %input{type: 'text', name: 'name', id: 'create_mindmap'}
       %label{for:'create_mindmap'}= "mindmap"
       %input{type: 'submit', value: 'create'}

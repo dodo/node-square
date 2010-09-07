@@ -79,14 +79,14 @@ $("input.in-place-edit").live('blur', function () {
 
 /// interface
 
-$('form#change_name').submit(function(){
+$('#name_changer').submit(function(){
   var name = $('input#change_name').val()
   //var color = $(this).find('#colorpicker div').css('backgroundColor')
   node2.change_name(name);
   return false;
 })
 
-$('form#chat').submit(function () {
+$('#chatter').submit(function () {
     var text = $('#chat_msg').val();
     node2.send_message(text);
     $('#chat_msg').val('');
@@ -94,7 +94,7 @@ $('form#chat').submit(function () {
     return false;
 });
 
-$('form#create_bubble').submit(function(){
+$('#bubble_creater').submit(function(){
   var name = $('input#create_mindmap').val();
   node2.create_bubble(name,  $.cookie('name'),  $.cookie('color'));
   return false;
