@@ -85,7 +85,7 @@ node2.initNode = function (_node) {
 };
 
 /// init
-node2.init_physics = function(){
+node2.init_physics = function () {
 // TODO remove global vars or capitalize or  move to sub hash const
     node2.fold_time = 50;
     node2.holder_width = $("#protonode .holder").outerWidth();

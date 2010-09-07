@@ -5,8 +5,8 @@ $(function(){ /* init1 */
 node2 = {}
 
 // globals vars
-node2.READONLY = false
-node2.SILENT   = false
+node2.READONLY = false;
+node2.SILENT   = false;
 
 /// create socket
 node2.socket = new io.Socket(location.hostname, {
@@ -17,7 +17,7 @@ node2.socket = new io.Socket(location.hostname, {
 
 // firefox workaround
 if(typeof(console) == 'undefined') console ={log: function () {},
-    error: function () {}, warn: function () {}, info: function () {}}; 
+    error: function () {}, warn: function () {}, info: function () {}};
 
 // less debug typing
 var clog = function(str){ console.log(str) }

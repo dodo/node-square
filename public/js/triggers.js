@@ -80,7 +80,7 @@ $("input.in-place-edit").live('blur', function () {
 /// interface
 
 $('form#change_name').submit(function(){
-  var name = $(this).find('input[type=text]').val()
+  var name = $('input#change_name').val()
   //var color = $(this).find('#colorpicker div').css('backgroundColor')
   node2.change_name(name);
   return false;
@@ -95,7 +95,7 @@ $('form#chat').submit(function () {
 });
 
 $('form#create_bubble').submit(function(){
-  var name = $(this).find('input[type=text]').val();
+  var name = $('input#create_mindmap').val();
   node2.create_bubble(name,  $.cookie('name'),  $.cookie('color'));
   return false;
 })

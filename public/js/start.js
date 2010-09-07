@@ -5,11 +5,12 @@ node2.init_physics();
 
 node2.socket.connect();
 
-$('#change_name').val( $.cookie('name') || 'anonymous' )
+$('input#change_name').val( $.cookie('name') || 'anonymous' )
 var initial_color = $.cookie('color') || 'black' // TODO: no global var
+$('#colorpicker').css("backgroundColor",initial_color);
 
 node2.register(
-  $('#change_name').val(),
+  $('input#change_name').val(),
   initial_color,
   location.pathname.slice(1)
 )

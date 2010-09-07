@@ -96,7 +96,7 @@ node2.socket.on('message', function(msg) {
         break;case 'node_moved':
           // ..
         break;case 'node_deleted':
-            jq_delete = $('#'+id_for_html(val.id))
+            jq_delete = $('#'+id_for_html(val.id));
             node2.springs_physics.remove( jq_delete[0].id );
             node2.delete_with_children( jq_delete );
         break;case 'content_edited':
