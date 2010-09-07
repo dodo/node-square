@@ -234,14 +234,12 @@ exports.connect = function(cb) {
 
                     console.log("sub-move");
 
-                    for(var i = 0; i < position.length - 2; i++) {
+                    for(var i = 0; i < position.length - 1; i++) {
                         console.log(cur);
                         cur = cur[position[i]].subs
                     }
 
-                    console.log(cur);
-                    delete cur[position[position.length-1]];
-                    console.log(cur);
+                    cur.splice(position[position.length-1], 1);
 
                     update({}, res, cb);
                 });
