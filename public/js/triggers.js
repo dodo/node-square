@@ -94,7 +94,7 @@ $('#chatter').submit(function () {
     return false;
 });
 
-$('#bubble_creater').submit(function(){
+$('#bubble_creator').submit(function(){
   var name = $('input#create_mindmap').val();
   node2.create_bubble(name,  $.cookie('name'),  $.cookie('color'));
   return false;
