@@ -37,7 +37,7 @@ node2.mover_options = {
         __offset.top  = ui.position.top;
         ui.position.left = 0;
         ui.position.top  = 0;
-    }    
+    }
 }
 
 $(".draggable").draggable( node2.draggable_options );
@@ -79,14 +79,14 @@ $("input.in-place-edit").live('blur', function () {
 
 /// interface
 
-$('#change_name_form').submit(function(){
+$('form#change_name').submit(function(){
   var name = $(this).find('input[type=text]').val()
   //var color = $(this).find('#colorpicker div').css('backgroundColor')
   node2.change_name(name);
   return false;
 })
 
-$('#chat_form').submit(function () {
+$('form#chat').submit(function () {
     var text = $('#chat_msg').val();
     node2.send_message(text);
     $('#chat_msg').val('');
@@ -94,7 +94,7 @@ $('#chat_form').submit(function () {
     return false;
 });
 
-$('#create_bubble_form').submit(function(){
+$('form#create_bubble').submit(function(){
   var name = $(this).find('input[type=text]').val();
   node2.create_bubble(name,  $.cookie('name'),  $.cookie('color'));
   return false;
@@ -139,7 +139,7 @@ $('#colorpicker').ColorPicker({
       $(colpkr).fadeOut(500);
       return false;
     }
-})
+});
 
 
 $('.realtime').click(function(){
@@ -181,7 +181,7 @@ $('.edit.button').live('click',function(){
 /// helper functions
 
 var edit_node_action = function (obj) {
-    if(!node2.READONLY){ 
+    if(!node2.READONLY){
         var parent = obj.parent();
         obj.replaceWith('<input type="text" class="in-place-edit" value="' + obj.text() + '" />').focus();
         parent.find('input.in-place-edit').focus();

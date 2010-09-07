@@ -66,11 +66,11 @@ node2.initNode = function (_node) {
 /// init
 node2.init_physics = function(){
 // TODO remove global vars or capitalize
-    node2.holder_min_height = 0; 
+    node2.holder_min_height = 0;
     node2.springs_physics = springsPhysics.generate();
     node2.springs_physics.static();
 
-    node2.ani_man = node2.springs_physics.ani_manager(42, 50); 
+    node2.ani_man = node2.springs_physics.ani_manager(42, 50);
     //ani_man.start();
 
     $(".node").each(function (_, _node) {node2.initNode(_node);});

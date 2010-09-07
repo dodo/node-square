@@ -1,30 +1,34 @@
-#title_bar
-  #title
-    = partial("button", [{symbol:"x", class:"delete_bubble", info:"burst bubble"}])
-    %h1#bubble
-      Node
-      %sup="❷"
-    %h2#hashes
-      ...and map your mind
+#title.bar
+  = partial("button", [{symbol:"✖", class:"delete_bubble", info:"burst bubble"}])
+  %h1#bubble
+    Node
+    %sup="❷"
+  %h2#hashes
+    … and map your mind
 
-#tool_bar
-  %form{id: 'chat_form'}
-    %input{type: 'text', name: 'msg', id: 'chat_msg'}
-    %label{for:'chat_msg'}= "chat"
-    %input{type: 'submit', value: 'send'}
-  editing:
-  %ul#user_list
-  %form{id: 'change_name_form' }
-    %div#colorpicker
-    %input{type: 'text',   name: 'name', id: 'change_name'}
-    %label{for:'change_name'}= "name"
-    %input{type: 'submit', value: 'update'}
-  %form{id: 'create_bubble_form'}
+#tool.bar
+  .sub.left
+    %form{id: 'chat'}
+      %input{type: 'text', name: 'msg', id: 'chat_msg'}
+      %label{for:'chat_msg'}= "chat"
+      %input{type: 'submit', value: 'send'}
+  .sub.left
+    editing:
+    %ul#user_list
+  .sub.right
+    %form{id: 'change_name' }
+      #colorpicker
+      %input{type: 'text',   name: 'name', id: 'change_name'}
+      %label{for:'change_name'}= "name"
+      %input{type: 'submit', value: 'update'}
+  .sub.right
+    %form{id: 'create_bubble'}
+      %input{type: 'text', name: 'name', id: 'create_mindmap'}
+      %label{for:'create_mindmap'}= "mindmap"
+      %input{type: 'submit', value: 'create'}
+  .sub.right
     = partial("button", [{symbol:"⚗", class:"realtime", info:"crazy mode - nodes move in realtime"}])
-    .button#nonerealtime{style:"display:none"}
-    %input{type: 'text', name: 'name', id: 'create_mindmap'}
-    %label{for:'create_mindmap'}= "mindmap"
-    %input{type: 'submit', value: 'create'}
+    #nonerealtime.button{style:"display:none"}
   %p <a href="http://nodeknockout.com/teams/chaotic-unicorns" target="nko" title="Help me win Node.js KO!"><img style="position: fixed; top: 5px; right: 5px; border: 0px; opacity: 0.1;" src="http://nodeknockout.com/images/voteko.png" alt="Help me win Node.js KO!" /></a>
 
 #chat_window
