@@ -4,7 +4,7 @@ $(function(){ /* client_functions / outbox */
 //// helpers
 // send
 send = function(what, hash){
-  if(!node2.SILENT){
+  if(!node2._const.SILENT){
     to_send = {};
     to_send[what] = hash;
     node2.socket.send(json_plz( to_send ));
@@ -23,7 +23,7 @@ var id_for_html = function(arr){
 node2.id_for_html = id_for_html
 
 var id_for_json = function(obj){
-  a = [] 
+  a = []
   $.each(obj.slice(2).split('_'), function(cur,ele){
     a[cur] = parseInt(ele);
   })
@@ -70,11 +70,11 @@ node2.change_color = function(color){
 node2.send_message = function(content){
   send('chat_message', {
     content: content,
-  })  
+  })
 }
 
 node2.add_node =  function(content, to){
-  if(!node2.READONLY){
+  if(!node2._const.READONLY){
     send('add_node', {
       'content': content,
       'to': to,
@@ -83,7 +83,7 @@ node2.add_node =  function(content, to){
 }
 
 node2.move_node = function(id, to){
-  if(!node2.READONLY){
+  if(!node2._const.READONLY){
     send('move_node', {
       'id': id,
       'to': to,
@@ -92,7 +92,7 @@ node2.move_node = function(id, to){
 }
 
 node2.delete_node = function(id){
-  if(!node2.READONLY){
+  if(!node2._const.READONLY){
     send('delete_node', {
      'id': id,
     });
@@ -143,7 +143,6 @@ node2.draw_node = function(node, par_id){
                   droppable( node2.droppable_options ).
                   appendTo('#nodes').fadeIn(100);
     obj.find('p').text( node.content || ' ' );
-    console.log("affe", $('#user_' + node.user).length )
     $('.user_' + node.user).find('.holder').css('backgroundColor', $('#user_' + node.user).css('color'));
     var par = $('#'+id_for_html(par_id));
     par.attr('relation',par.attr('relation')+','+html_id);
@@ -152,8 +151,8 @@ node2.draw_node = function(node, par_id){
     if(node.subs) {
       $.each(node.subs, function(_,cur){
         node2.draw_node(cur, id_for_json(html_id) )
-      });  
-    }    
+      });
+    }
   }
 }
 
@@ -195,7 +194,7 @@ console.log($(current))
 
 node2.print_message = function (msg) {
     var date = new Date();
-    var p = function (n) {return n < 10 ? "0" + n : n;}; 
+    var p = function (n) {return n < 10 ? "0" + n : n;};
     var strdate = p(date.getHours())+":"+p(date.getMinutes())+":"+p(date.getSeconds());
     $('#messages').append("<p> <span class='time'>["+strdate+"]</span>"+msg+"</p>");
     $('#messages').animate({marginTop:$('#chat_window').height()-$('#messages').height()},200);

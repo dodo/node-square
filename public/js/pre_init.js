@@ -2,11 +2,11 @@ $(function(){ /* init1 */
 //// main client init initialisation
 
 // node2 global
-node2 = {}
+node2 = {_const:{}};
 
 // globals vars
-node2.READONLY = false;
-node2.SILENT   = false;
+node2._const.READONLY = false;
+node2._const.SILENT   = false;
 
 /// create socket
 node2.socket = new io.Socket(location.hostname, {

@@ -103,7 +103,7 @@ $('form#create_bubble').submit(function(){
 
 $('.delete_bubble').click(function(){
   node2.delete_bubble()
-  alert("ALERT BOX")
+  console.log("ALERT BOX")
   return false;
 })
 

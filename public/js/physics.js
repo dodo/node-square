@@ -42,15 +42,15 @@ node2.initNode = function (_node) {
                              me.parent().find(".body").outerHeight())+1;
             me.css("overflow", "hidden");
             me.animate({
-                    width: node2.holder_width * 0.2,
+                    width: node2._const.holder_width * 0.2,
                     height: h,
-                }, node2.fold_time, function () {
+                }, node2._const.fold_time, function () {
                     mybuttons.css("visibility","hidden");
             }).parent().animate({
-                left:  '+=' + node2.holder_width,
-                width: '-=' + node2.holder_width,
+                left:  '+=' + node2._const.holder_width,
+                width: '-=' + node2._const.holder_width,
                 height: h,
-            }, node2.fold_time);
+            }, node2._const.fold_time);
         }
     );
     // buttons setup
@@ -59,7 +59,7 @@ node2.initNode = function (_node) {
     holder.css({
         height: h,
         overflow: "hidden",
-        width: node2.holder_width * 0.2,
+        width: node2._const.holder_width * 0.2,
     }).hover(
         function () { // handleIn
             if(holder_out) return;
@@ -71,15 +71,15 @@ node2.initNode = function (_node) {
                              me.parent().find(".body").outerHeight())+7;
             mybuttons.css("visibility","visible");
             me.animate({
-                    width: node2.holder_width,
+                    width: node2._const.holder_width,
                     height: h,
-                }, node2.fold_time, function () {
+                }, node2._const.fold_time, function () {
                     me.css("overflow", "visible");
             }).parent().animate({
-                left:  '-=' + node2.holder_width,
-                width: '+=' + node2.holder_width,
+                left:  '-=' + node2._const.holder_width,
+                width: '+=' + node2._const.holder_width,
                 height: h,
-            }, node2.fold_time);
+            }, node2._const.fold_time);
         }
     );
 };
@@ -87,8 +87,8 @@ node2.initNode = function (_node) {
 /// init
 node2.init_physics = function () {
 // TODO remove global vars or capitalize or  move to sub hash const
-    node2.fold_time = 50;
-    node2.holder_width = $("#protonode .holder").outerWidth();
+    node2._const.fold_time = 50;
+    node2._const.holder_width = $("#protonode .holder").outerWidth();
     node2.springs_physics = springsPhysics.generate();
     node2.springs_physics.static();
 
