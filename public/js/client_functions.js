@@ -23,7 +23,7 @@ var id_for_html = function(arr){
 node2.id_for_html = id_for_html
 
 var id_for_json = function(obj){
-  a = [] 
+  a = []
   $.each(obj.slice(2).split('_'), function(cur,ele){
     a[cur] = parseInt(ele);
   })
@@ -70,7 +70,7 @@ node2.change_color = function(color){
 node2.send_message = function(content){
   send('chat_message', {
     content: content,
-  })  
+  })
 }
 
 node2.add_node =  function(content, to){
@@ -125,8 +125,10 @@ node2.create_bubble = function(bubble_name, name, color){
   }) )
 }
 
-node2.delete_bubble = function(){
-  send('destroy', {})
+node2.delete_bubble = function(hash){
+  send('destroy', {
+      hash: hash
+  })
 }
 
 /// manipulation of nodes
@@ -152,8 +154,8 @@ node2.draw_node = function(node, par_id){
     if(node.subs) {
       $.each(node.subs, function(_,cur){
         node2.draw_node(cur, id_for_json(html_id) )
-      });  
-    }    
+      });
+    }
   }
 }
 
@@ -172,21 +174,16 @@ console.log($(current))
     if( $(current).attr('relation') && $(current).attr('relation').length ){
       children = $(current).attr("relation")
     }
-    clog(4444444)
     console.log(children)
     $.each(children.split(","),function (_,relation) {
     console.log(relation)
         if(relation != "") {
             var target = $("#"+relation);
-            clog('t')
-            clog(target)
             if(target.length) {
-            console.log('BBBBBBBBBBBBBBB')
                node2.delete_with_children(target)
             }
         }
     });
-    clog('REM')
     $(current).remove()
 //    fade_and_remove( $(current)[0].id )
 }
@@ -195,7 +192,7 @@ console.log($(current))
 
 node2.print_message = function (msg) {
     var date = new Date();
-    var p = function (n) {return n < 10 ? "0" + n : n;}; 
+    var p = function (n) {return n < 10 ? "0" + n : n;};
     var strdate = p(date.getHours())+":"+p(date.getMinutes())+":"+p(date.getSeconds());
     $('#messages').append("<p> <span class='time'>["+strdate+"]</span>"+msg+"</p>");
     $('#messages').animate({marginTop:$('#chat_window').height()-$('#messages').height()},200);
@@ -205,3 +202,4 @@ node2.print_message = function (msg) {
 
 //// close
 });
+

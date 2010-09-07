@@ -80,7 +80,7 @@ node2.socket.on('message', function(msg) {
           $('.user_' + val.id).find('.holder').css('background', val.color);//.css('border', '1px solid ' + val.color)
         break;case 'node_added':
           node2.draw_node(val, val.to);
-          var html_id = id_for_html(val.to) + '_' + ($('.'+ id_for_html(val.to)).length-1 );
+          var html_id = node2.id_for_html(val.to) + '_' + ($('.'+ node2.id_for_html(val.to)).length-1 );
           var name = $.cookie('name');
           var user = $('#user_' + val.user);
 
@@ -90,13 +90,13 @@ node2.socket.on('message', function(msg) {
           obj.width(obj.find(".body").width()+33+obj.find(".holder").width());
           obj.height(obj.find(".body").height()+13);
           if(name == user.text())
-            edit_node_action(obj.find("p"));
+            node2.edit_node_action(obj.find("p"));
           node2.ani_man.animate(1500, 3);
 
         break;case 'node_moved':
           // ..
         break;case 'node_deleted':
-            jq_delete = $('#'+id_for_html(val.id));
+            jq_delete = $('#'+node2.id_for_html(val.id));
             node2.springs_physics.remove( jq_delete[0].id );
             node2.delete_with_children( jq_delete );
         break;case 'content_edited':
@@ -123,3 +123,4 @@ var append_user = function(id, cur){
 
 //// close
 });
+

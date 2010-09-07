@@ -60,7 +60,9 @@ node2.initNode = function (_node) {
         height: h,
         overflow: "hidden",
         width: node2.holder_width * 0.2,
-    }).hover(
+    })
+    if(!node2.READONLY){
+      holder.hover(
         function () { // handleIn
             if(holder_out) return;
             holder_out = true;
@@ -81,7 +83,8 @@ node2.initNode = function (_node) {
                 height: h,
             }, node2.fold_time);
         }
-    );
+      );
+    }
 };
 
 /// init
@@ -103,3 +106,4 @@ node2.init_physics = function () {
 
 //// close
 });
+

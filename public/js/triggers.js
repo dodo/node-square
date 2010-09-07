@@ -46,14 +46,14 @@ $("#mover").draggable( node2.mover_options );
 
 /// manipulating
 $('.add_node').live('click', function(){
-  var to_id   = id_for_json( get_node_id(this) )
+  var to_id   = node2.id_for_json( node2.get_node_id(this) )
   var content = $(this).parent().find('p').text()
   node2.add_node(content, to_id)
   return false
 })
 
 $('.delete_node').live('click', function(){
-  var node_id = id_for_json( get_node_id(this) )
+  var node_id = node2.id_for_json( node2.get_node_id(this) )
   node2.delete_node(node_id);
   return false;
 })
@@ -102,8 +102,7 @@ $('form#create_bubble').submit(function(){
 
 
 $('.delete_bubble').click(function(){
-  node2.delete_bubble()
-  alert("ALERT BOX")
+  node2.delete_bubble(location.pathname.slice(1))
   return false;
 })
 
@@ -187,6 +186,7 @@ var edit_node_action = function (obj) {
         parent.find('input.in-place-edit').focus();
     }
 };
+node2.edit_node_action = edit_node_action
 
 var inplace_submit_and_restore_p = function(ele){
   node2.edit_content( node2.get_node_id(ele), $(ele).val() )
@@ -196,3 +196,4 @@ var inplace_submit_and_restore_p = function(ele){
 
 //// done
 });
+
