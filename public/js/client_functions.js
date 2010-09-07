@@ -4,7 +4,7 @@ $(function(){ /* client_functions / outbox */
 //// helpers
 // send
 send = function(what, hash){
-  if(!node2.SILENT){
+  if(!node2._const.SILENT){
     to_send = {};
     to_send[what] = hash;
     node2.socket.send(json_plz( to_send ));
@@ -74,7 +74,7 @@ node2.send_message = function(content){
 }
 
 node2.add_node =  function(content, to){
-  if(!node2.READONLY){
+  if(!node2._const.READONLY){
     send('add_node', {
       'content': content,
       'to': to,
@@ -83,7 +83,7 @@ node2.add_node =  function(content, to){
 }
 
 node2.move_node = function(id, to){
-  if(!node2.READONLY){
+  if(!node2._const.READONLY){
     send('move_node', {
       'id': id,
       'to': to,
@@ -92,7 +92,7 @@ node2.move_node = function(id, to){
 }
 
 node2.delete_node = function(id){
-  if(!node2.READONLY){
+  if(!node2._const.READONLY){
     send('delete_node', {
      'id': id,
     });
@@ -145,7 +145,6 @@ node2.draw_node = function(node, par_id){
                   droppable( node2.droppable_options ).
                   appendTo('#nodes').fadeIn(100);
     obj.find('p').text( node.content || ' ' );
-    console.log("affe", $('#user_' + node.user).length )
     $('.user_' + node.user).find('.holder').css('backgroundColor', $('#user_' + node.user).css('color'));
     var par = $('#'+id_for_html(par_id));
     par.attr('relation',par.attr('relation')+','+html_id);

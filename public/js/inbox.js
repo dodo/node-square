@@ -20,7 +20,7 @@ node2.socket.on('message', function(msg) {
         break;case 'err':
           node2.error_msg(val.msg)
         break;case 'info':
-          node2.SILENT = true;
+          node2._const.SILENT = true;
         break;case 'registered':
           append_user(val.id, val);
           node2.print_message("<span class='announcement'>"+val.name+" connected.</span>");
@@ -45,7 +45,7 @@ node2.socket.on('message', function(msg) {
               hash_string = hash_string.concat( '<a class="hash_link" href="http://' + location.host + '/' + val.bubble.hashes[0] + '">read-only version</a>')
 
               if( val.bubble.hashes.length == 1 ){ // readonly
-                node2.READONLY = true;
+                node2._const.READONLY = true;
               }
        //   }
           if( val.bubble.hashes[0] != '' ){
